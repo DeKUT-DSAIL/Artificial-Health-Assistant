@@ -1,4 +1,4 @@
-#MR Data Pipeline
+# MMR Data Pipeline
 This 'pipeline' streams data and commits it an azure SQL database
 
 ## Installation
