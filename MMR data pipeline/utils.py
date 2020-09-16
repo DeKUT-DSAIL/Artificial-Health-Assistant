@@ -54,19 +54,6 @@ def stream_data(device: MetaWearClient, seconds: float = 11.0, data_rate: float 
     return acc, gyr
 
 
-def recreate_database() -> None:
-    """
-    his function creates tables in a database in None exist
-    else it deletes and creates them again
-    :return None:
-    """
-    try:
-        Base.metadata.drop_all(engine)
-    except:
-        pass
-    Base.metadata.create_all(engine)
-
-
 def reset(device) -> None:
     """
     This function resets your device if its stuck in a bad state
