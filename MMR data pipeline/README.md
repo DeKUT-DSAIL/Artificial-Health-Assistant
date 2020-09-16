@@ -2,23 +2,30 @@
 This 'pipeline' streams data and commits it an azure SQL database
 
 ## Installation
+- Install [ODBC driver for SQL server](https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?redirectedfrom=MSDN&view=sql-server-ver15)
+
+- Make sure The python API is set up correctly.
+    1. Linux [API Installation](https://mbientlab.com/tutorials/PyLinux.html)
+    2. Windows [API Installation](https://mbientlab.com/tutorials/PyWindows.html)
+
 To install required packages, run the following command after creating a virtual env.
-- in unix
-```python
-pip3 install -r requirements.txt
-```
-- in windows
+
 ```python
 pip install -r requirements.txt
 ```
 
-Before continuing, you need to have the PASSWORD and UID of the database.
+Before continuing, you need to have the CONN_STR to the database.
 
 Run the following in a terminal
 
+- Unix
+
 ```
-$ export PASSWORD=verystrongpass
-$ export USERID=awesomeuser
+$ export CONN_STR=pastethereallyreallylongconnectionstringhere
+```
+- Windows
+```
+$ set CONN_STR=pastethereallyreallylongconnectionstringhere
 ```
 
 ## Usage
@@ -40,7 +47,7 @@ Choose a number for an exercise below
 3. Jogs
 4. Body Stretch(Arms)
 
-2  <-- This is my choise
+2 
 
 ```
 

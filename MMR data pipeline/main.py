@@ -41,7 +41,11 @@ def record_data(label: str, device: MetaWearClient) -> None:
     s.close()
 
 
-if __name__ == "__main__":
+def run() -> None:
+    """
+    Starts the program
+    :return None:
+    """
     # Create a MetaWear device
     d = MetaWearClient('EE:50:E7:BF:21:83')  # Substitute with your MAC
 
@@ -72,7 +76,13 @@ if __name__ == "__main__":
         action = 'body stretch'
 
     # Start to stream and record data
-    record_data(label=action, device=d)
+    try:
+        record_data(label=action, device=d)
+    except Exception as message:
+        print("Commit to database failed terribly due to\n", message)
 
     # Disconnect device
     d.disconnect()
+
+
+run()
