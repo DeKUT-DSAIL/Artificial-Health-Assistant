@@ -13,12 +13,11 @@ engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=engine)
 
 
-def stream_data(device: MetaWearClient, seconds: float = 11.0, data_rate: float = 25.0, acc_data_range: float = 16.0,
+def stream_data(device: MetaWearClient, data_rate: float = 25.0, acc_data_range: float = 16.0,
                 gyr_data_range: int = 500):
     """
     This function streams accelerometer and gyroscope data
     :param device: MetaWearClient
-    :param seconds: float
     :param data_rate: float
     :param acc_data_range: float
     :param gyr_data_range: int
@@ -33,17 +32,20 @@ def stream_data(device: MetaWearClient, seconds: float = 11.0, data_rate: float 
 
     def acc_callback(data_struct):
         """Handle a (epoch, (x,y,z)) data tuple."""
-        acc_data_points.append(data_struct)
+        if len(acc_data_points) <= 269:
+            acc_data_points.append(data_struct)
 
     def gyr_callback(data_struct):
         """Handle a (epoch, (x,y,z)) data tuple."""
-        gyr_data_points.append(data_struct)
+        if len(gyr_data_points) <= 269:
+            gyr_data_points.append(data_struct)
 
     # Enable notifications and register a callback for them.
     device.accelerometer.notifications(callback=acc_callback)
     device.gyroscope.notifications(callback=gyr_callback)
 
-    sleep(seconds)
+    while len(acc_data_points) < 270 or len(gyr_data_points) < 270:
+        sleep(0.1)
 
     acc = (str([i['value'].x for i in acc_data_points]), str([j['value'].y for j in acc_data_points]),
            str([k['value'].z for k in acc_data_points]))
@@ -52,6 +54,19 @@ def stream_data(device: MetaWearClient, seconds: float = 11.0, data_rate: float 
            str([k['value'].z for k in gyr_data_points]))
 
     return acc, gyr
+
+
+def recreate_database() -> None:
+    """
+    his function creates tables in a database in None exist
+    else it deletes and creates them again
+    :return None:
+    """
+    try:
+        Base.metadata.drop_all(engine)
+    except:
+        pass
+    Base.metadata.create_all(engine)
 
 
 def reset(device) -> None:
