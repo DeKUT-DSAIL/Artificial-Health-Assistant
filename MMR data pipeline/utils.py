@@ -45,7 +45,7 @@ def stream_data(device: MetaWearClient, data_rate: float = 25.0, acc_data_range:
     device.gyroscope.notifications(callback=gyr_callback)
 
     while len(acc_data_points) < 270 or len(gyr_data_points) < 270:
-        sleep(0.1)
+        sleep(0.04)
 
     acc = (str([i['value'].x for i in acc_data_points]), str([j['value'].y for j in acc_data_points]),
            str([k['value'].z for k in acc_data_points]))
