@@ -10,6 +10,8 @@ e.g export PASSWORD=pass123
 CONN_STR = os.environ.get('CONN_STR')
 
 PARAMS = quote_plus(CONN_STR)
+#If error occurs try 
+#PARAMS = quote_plus(str(CONN_STR))
 
 # Azure MySQL
 DATABASE_URI = 'mssql+pyodbc:///?odbc_connect={}'.format(PARAMS)    # Construct as database uri
