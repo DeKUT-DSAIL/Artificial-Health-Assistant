@@ -10,7 +10,7 @@ e.g export PASSWORD=pass123
 CONN_STR = os.environ.get('CONN_STR')
 
 PARAMS = quote_plus(CONN_STR)
-#If error occurs try 
+#If 'TypeError: quote_from_bytes() expected bytes' occurs try
 #PARAMS = quote_plus(str(CONN_STR))
 
 # Azure MySQL
