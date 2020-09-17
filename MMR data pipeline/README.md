@@ -46,18 +46,33 @@ Choose a number for an exercise below
 2. Squats
 3. Jogs
 4. Body Stretch(Arms)
+3
+Enter number of Rounds You'll do jogs: 3
 
-2 
 
 ```
 
 Then the output will be something like this
 ```
-Logging data for squats
+Logging and adding data for jogs to database
+(Approx. 81 seconds)
+Round 1
 Finished!
-Committing squats data to database...
+Round 2
+Finished!
+Round 3
+Finished!
+Committing jogs of 3 Round(s) data to database...
 Finished!
 
+```
+Then you can choose to continue or Exit the program
+```
+Continue or exit
+1. Continue
+2. Exit
+
+1
 ```
 
 ## Some challenges you might face
@@ -69,6 +84,9 @@ Aborted (core dumped)
 
 ```
 I'm not sure what the problem is, but if you run it one more time, boom. fixed :)
+
+### Another Challenge I've faced
+The bluetooth may disconnect mid program. Just hit ```ctrl + C``` to stop program and restart again
 
 ## Querying data
 To query data you can create a notebook or just run along with a script
