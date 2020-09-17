@@ -13,47 +13,66 @@ engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=engine)
 
 
-def stream_data(device: MetaWearClient, data_rate: float = 25.0, acc_data_range: float = 16.0,
-                gyr_data_range: int = 500):
+def stream_acc_data(device: MetaWearClient, data_rate: float = 50.0, acc_data_range: float = 16.0):
     """
-    This function streams accelerometer and gyroscope data
+    This function streams accelerometer data
     :param device: MetaWearClient
     :param data_rate: float
     :param acc_data_range: float
-    :param gyr_data_range: int
-    :return accelerometer and gyroscope tuples of x, y, z axis:
+    :return accelerometer tuples of x, y, z axis:
     """
     acc_data_points = []
-    gyr_data_points = []
 
     # Set data rate and measuring range
     device.accelerometer.set_settings(data_rate=data_rate, data_range=acc_data_range)
-    device.gyroscope.set_settings(data_rate=data_rate, data_range=gyr_data_range)
 
     def acc_callback(data_struct):
         """Handle a (epoch, (x,y,z)) data tuple."""
-        if len(acc_data_points) <= 269:
+        if len(acc_data_points) <= 199:
             acc_data_points.append(data_struct)
-
-    def gyr_callback(data_struct):
-        """Handle a (epoch, (x,y,z)) data tuple."""
-        if len(gyr_data_points) <= 269:
-            gyr_data_points.append(data_struct)
 
     # Enable notifications and register a callback for them.
     device.accelerometer.notifications(callback=acc_callback)
-    device.gyroscope.notifications(callback=gyr_callback)
 
-    while len(acc_data_points) < 270 or len(gyr_data_points) < 270:
-        sleep(0.04)
+    while len(acc_data_points) < 200:
+        sleep(0.02)
+    device.accelerometer.notifications()
 
     acc = (str([i['value'].x for i in acc_data_points]), str([j['value'].y for j in acc_data_points]),
            str([k['value'].z for k in acc_data_points]))
 
+    return acc
+
+
+def stream_gyr_data(device: MetaWearClient, data_rate: float = 50.0, gyr_data_range: int = 500):
+    """
+    This function streams gyroscope data
+    :param device: MetaWearClient
+    :param data_rate: float
+    :param gyr_data_range: int
+    :return gyroscope tuples of x, y, z axis:
+    """
+    gyr_data_points = []
+
+    # Set data rate and measuring range
+    device.gyroscope.set_settings(data_rate=data_rate, data_range=gyr_data_range)
+
+    def gyr_callback(data_struct):
+        """Handle a (epoch, (x,y,z)) data tuple."""
+        if len(gyr_data_points) <= 199:
+            gyr_data_points.append(data_struct)
+
+    # Enable notifications and register a callback for them.
+    device.gyroscope.notifications(callback=gyr_callback)
+
+    while len(gyr_data_points) < 200:
+        sleep(0.02)
+    device.gyroscope.notifications()
+
     gyr = (str([i['value'].x for i in gyr_data_points]), str([j['value'].y for j in gyr_data_points]),
            str([k['value'].z for k in gyr_data_points]))
 
-    return acc, gyr
+    return gyr
 
 
 def recreate_database() -> None:
