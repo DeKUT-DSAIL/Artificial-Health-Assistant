@@ -64,7 +64,6 @@ Round 2
 Accelerometer: 	 |████████████████████████████████████████| 100.0% Complete
 Gyroscope: 	 |████████████████████████████████████████| 100.0% Complete
 Finished!
-Round 3
 
 
 ```
