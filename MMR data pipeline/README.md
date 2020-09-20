@@ -54,16 +54,18 @@ Enter number of Rounds You'll do jogs: 3
 
 Then the output will be something like this
 ```
-Logging and adding data for jogs to database
-(Approx. 81 seconds)
+Logging and adding data for squats to database
+(Approx. 32 seconds)
 Round 1
+Accelerometer: 	 |████████████████████████████████████████| 100.0% Complete
+Gyroscope: 	 |████████████████████████████████████████| 100.0% Complete
 Finished!
 Round 2
+Accelerometer: 	 |████████████████████████████████████████| 100.0% Complete
+Gyroscope: 	 |████████████████████████████████████████| 100.0% Complete
 Finished!
 Round 3
-Finished!
-Committing jogs of 3 Round(s) data to database...
-Finished!
+
 
 ```
 Then you can choose to continue or Exit the program
