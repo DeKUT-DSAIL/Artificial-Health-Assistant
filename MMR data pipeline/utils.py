@@ -13,6 +13,29 @@ engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=engine)
 
 
+# Print iterations progress
+def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', print_end="\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filled_length = int(length * iteration // total)
+    bar = fill * filled_length + '-' * (length - filled_length)
+    print(f'\r{prefix}\t |{bar}| {percent}% {suffix}', end=print_end)
+    # Print New Line on Complete
+    if iteration == total:
+        print()
+
+
 def stream_acc_data(device: MetaWearClient, data_rate: float = 50.0, acc_data_range: float = 16.0):
     """
     This function streams accelerometer data
@@ -26,10 +49,13 @@ def stream_acc_data(device: MetaWearClient, data_rate: float = 50.0, acc_data_ra
     # Set data rate and measuring range
     device.accelerometer.set_settings(data_rate=data_rate, data_range=acc_data_range)
 
+    print_progress_bar(0, 200, prefix='Accelerometer: ', suffix='Complete', length=40)
+
     def acc_callback(data_struct):
         """Handle a (epoch, (x,y,z)) data tuple."""
         if len(acc_data_points) <= 199:
             acc_data_points.append(data_struct)
+            print_progress_bar(len(acc_data_points), 200, prefix='Accelerometer: ', suffix='Complete', length=40)
 
     # Enable notifications and register a callback for them.
     device.accelerometer.notifications(callback=acc_callback)
@@ -57,10 +83,13 @@ def stream_gyr_data(device: MetaWearClient, data_rate: float = 50.0, gyr_data_ra
     # Set data rate and measuring range
     device.gyroscope.set_settings(data_rate=data_rate, data_range=gyr_data_range)
 
+    print_progress_bar(0, 200, prefix='Gyroscope: ', suffix='Complete', length=40)
+
     def gyr_callback(data_struct):
         """Handle a (epoch, (x,y,z)) data tuple."""
         if len(gyr_data_points) <= 199:
             gyr_data_points.append(data_struct)
+            print_progress_bar(len(gyr_data_points), 200, prefix='Gyroscope: ', suffix='Complete', length=40)
 
     # Enable notifications and register a callback for them.
     device.gyroscope.notifications(callback=gyr_callback)

@@ -15,7 +15,7 @@ def record_data(label: str, device: MetaWearClient, rounds: int) -> None:
     s = Session()
 
     print(f"Logging and adding data for {label} to database")
-    print(f"(Approx. {rounds * 27} seconds)")
+    print(f"(Approx. {rounds * 8} seconds)")
     for i in range(rounds):
         print(f'Round {i + 1}')
         acc, gyr = stream_acc_data(device=device), stream_gyr_data(device=device)
@@ -90,11 +90,13 @@ def run() -> None:
             record_data(label=action, device=d, rounds=rounds)
             choice = input('Continue or exit\n1. Continue\n2. Exit\n')
             if choice != '1':
+                print("Exiting...")
                 proceed = False
         except Exception as message:
             print("Commit to database failed terribly due to\n", message)
             choice = input('Repeat or exit\n1. Repeat\n2. Exit\n')
             if choice != '1':
+                print("Exiting...")
                 proceed = False
 
         # Disconnect device
