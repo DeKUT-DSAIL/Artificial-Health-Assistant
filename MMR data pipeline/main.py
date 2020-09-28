@@ -1,46 +1,45 @@
 from pymetawear.client import MetaWearClient
 
 from model import BodyAccX, BodyAccY, BodyAccZ, BodyGyroX, BodyGyroY, BodyGyroZ
-from utils import Session, stream_acc_data, stream_gyr_data
+from pymetawear.discover import select_device
+from utils import Session, stream_data
+# from testing_utils import stream_data
 
 
-def record_data(label: str, device: MetaWearClient, rounds: int) -> None:
+def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     """
     This function commits the data streamed to the database
+    :param time_:
     :param label:
     :param device:
-    :param rounds:
     :return None:
     """
     s = Session()
 
     print(f"Logging and adding data for {label} to database")
-    print(f"(Approx. {rounds * 8} seconds)")
-    for i in range(rounds):
-        print(f'Round {i + 1}')
-        acc, gyr = stream_acc_data(device=device), stream_gyr_data(device=device)
-        print("Finished!")
+    acc, gyr = stream_data(device=device, time_=time_)
+    print("Finished!\n")
 
-        gx = gyr[0].replace('[', '').replace(']', '')
-        gy = gyr[1].replace('[', '').replace(']', '')
-        gz = gyr[2].replace('[', '').replace(']', '')
+    gx = gyr[0].replace('[', '').replace(']', '')
+    gy = gyr[1].replace('[', '').replace(']', '')
+    gz = gyr[2].replace('[', '').replace(']', '')
 
-        ax = acc[0].replace('[', '').replace(']', '')
-        ay = acc[1].replace('[', '').replace(']', '')
-        az = acc[2].replace('[', '').replace(']', '')
+    ax = acc[0].replace('[', '').replace(']', '')
+    ay = acc[1].replace('[', '').replace(']', '')
+    az = acc[2].replace('[', '').replace(']', '')
 
-        s.add(BodyAccX(row_data=ax, label=label))
-        s.add(BodyAccY(row_data=ay, label=label))
-        s.add(BodyAccZ(row_data=az, label=label))
+    s.add(BodyAccX(row_data=ax, label=label))
+    s.add(BodyAccY(row_data=ay, label=label))
+    s.add(BodyAccZ(row_data=az, label=label))
 
-        s.add(BodyGyroX(row_data=gx, label=label))
-        s.add(BodyGyroY(row_data=gy, label=label))
-        s.add(BodyGyroZ(row_data=gz, label=label))
+    s.add(BodyGyroX(row_data=gx, label=label))
+    s.add(BodyGyroY(row_data=gy, label=label))
+    s.add(BodyGyroZ(row_data=gz, label=label))
 
-    print(f"Committing {label} of {rounds} Round(s) data to database...")
+    print(f"Committing {label} data to database...")
 
     s.commit()
-    print("Finished!")
+    print("Finished!\n")
     s.close()
 
 
@@ -50,44 +49,40 @@ def run() -> None:
     :return None:
     """
     # Create a MetaWear device
-    d = MetaWearClient('EE:50:E7:BF:21:83')  # Substitute with your MAC
+    address = select_device()
+    d = MetaWearClient(str(address))
 
     proceed = True
 
+    prompt = """
+    \nChoose a number for an exercise below
+    1. Walking
+    2. Sitting
+    3. Matching
+    4. Body Stretch(Arms)
+    """
+
     while proceed:
-        exercise = int(input(
-            "\nChoose a number for an exercise below\n"
-            "1. Jumping Jacks\n"
-            "2. Squats\n"
-            "3. Jogs\n"
-            "4. Body Stretch(Arms)\n"
-        ))
+        exercise = int(input(prompt))
 
         while exercise not in [1, 2, 3, 4]:
-            exercise = int(input(
-                "\nChoose a number for an exercise below\n"
-                "1. Jumping Jacks\n"
-                "2. Squats\n"
-                "3. Jogs\n"
-                "4. Body Stretch(Arms)\n"
-            ))
+            exercise = int(input(prompt))
 
         if exercise == 1:
-            action = 'jumping jacks'
+            action = 'walking'
         elif exercise == 2:
-            action = 'squats'
+            action = 'sitting'
         elif exercise == 3:
-            action = 'jogs'
+            action = 'matching'
         else:
             action = 'body stretch'
 
-        rounds = int(input(
-            f"Enter number of Rounds You'll do {action}: "
-        ))
+        time_ = int(input(f"\nEnter Seconds You'll do {action}:\n"))
+        # time_ = 60
 
         # Start to stream and record data
         try:
-            record_data(label=action, device=d, rounds=rounds)
+            record_data(label=action, device=d, time_=time_)
             choice = input('Continue or exit\n1. Continue\n2. Exit\n')
             if choice != '1':
                 print("Exiting...")
