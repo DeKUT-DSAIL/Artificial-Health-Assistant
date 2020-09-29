@@ -1,3 +1,4 @@
+'''
 import os
 from urllib.parse import quote_plus
 
@@ -12,3 +13,4 @@ DATABASE_URI = 'mssql+pyodbc:///?odbc_connect={}'.format(PARAMS)
 
 # Local Postgresql
 # DATABASE_URI = 'postgres+psycopg2://postgres:postgres@localhost:5432/data'
+'''
