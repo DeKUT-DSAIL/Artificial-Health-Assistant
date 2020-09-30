@@ -10,9 +10,6 @@ from pymetawear.client import MetaWearClient
 
 from config import DATABASE_URI
 
-# Connect to SQL Server
-conn = pyodbc.connect(DATABASE_URI)
-cursor = conn.cursor()
 
 #engine = create_engine(DATABASE_URI)
 #Session = sessionmaker(bind=engine)

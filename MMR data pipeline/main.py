@@ -3,7 +3,12 @@
 
 import pandas as pd
 from pymetawear.discover import select_device
-from utils import conn, stream_data
+#from utils import conn, stream_data
+
+# Connect to SQL Server
+conn = pyodbc.connect(DATABASE_URI)
+cursor = conn.cursor()
+
 
 
 def record_data(label: str, device: MetaWearClient) -> None:
