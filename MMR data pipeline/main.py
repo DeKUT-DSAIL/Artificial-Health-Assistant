@@ -1,6 +1,6 @@
 #from pymetawear.client import MetaWearClient
 #from model import BodyAccX, BodyAccY, BodyAccZ, BodyGyroX, BodyGyroY, BodyGyroZ
-
+import pyodbc
 import pandas as pd
 from pymetawear.discover import select_device
 #from utils import conn, stream_data
