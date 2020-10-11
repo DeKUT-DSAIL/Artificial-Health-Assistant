@@ -42,13 +42,13 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     #Upload Blob
     #Accelorometer
     container_name = label
-    blob_name = 'acc/'+acc_filename
+    blob_name = 'acc/'+acc_file_name
     blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
     #Gyroscope
-    blob.upload_blob(acc)
-    blob_name = 'gyr/'+gyr_filename
+    blob.upload_blob(acc_csv)
+    blob_name = 'gyr/'+gyr_file_name
     blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
-    blob.upload_blob(acc)
+    blob.upload_blob(acc_gyr)
     
     print("Sucessfully uploaded!")
     
