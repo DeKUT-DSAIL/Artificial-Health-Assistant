@@ -63,6 +63,8 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     
     print("Sucessfully uploaded!")
     
+    os.remove(acc_data_path)
+    os.remove(gyr_data_path)
 
 
 def run() -> None:
