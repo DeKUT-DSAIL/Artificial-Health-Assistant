@@ -1,14 +1,16 @@
-#from pymetawear.client import MetaWearClient
+from pymetawear.client import MetaWearClient
 #from model import BodyAccX, BodyAccY, BodyAccZ, BodyGyroX, BodyGyroY, BodyGyroZ
 import pyodbc
 import pandas as pd
+import os, uuid, sys
+from datetime import datetime as dt
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from pymetawear.discover import select_device
-#from utils import conn, stream_data
+from utils import conn, stream_data
 
 # Connect to SQL Server
-conn = pyodbc.connect(DATABASE_URI)
-cursor = conn.cursor()
-
+#conn = pyodbc.connect(DATABASE_URI)
+#cursor = conn.cursor()
 
 
 def record_data(label: str, device: MetaWearClient) -> None:
@@ -21,49 +23,32 @@ def record_data(label: str, device: MetaWearClient) -> None:
     print(f"Logging data for {label}")
     acc, gyr = stream_data(device=device)
     print("Finished!")
-
-    #Removing unnecessary columns 
-    acc_df = acc(['elapsed (s)', 'time (06:00)'], axis = 1)
-    gyr_df = gyr(['elapsed (s)', 'time (06:00)'], axis = 1)
-
-    #Renaming columns
-    acc_df.rename(columns = {'epoch (ms)': 'Epoch', 'x-axis (g)':'X_axis', 'y-axis (g)': 'Y_axis', 'z-axis (g)': 'Z_axis'}, inplace = True) 
-    gyr_df.rename(columns = {'epoch (ms)': 'Epoch', 'x-axis (deg/s)':'X_axis', 'y-axis (deg/s)': 'Y_axis', 'z-axis (deg/s)': 'Z_axis'}, inplace = True) 
-
-    #Add activity label
-    acc_df =acc_df.assign(Label = label)
-    gyr_df = gyr_df.assign(Label = label)
     
-    # Create Table if one doesnt already exist
-    cursor.execute('''
-    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES
-           WHERE TABLE_NAME = N'body_acc_all')
-    BEGIN
-     CREATE TABLE body_acc_all (Epoch bigint, X_axis float, Y_axis float, Z_axis float, Label varchar(50))
-    END '''
-    )
+    #Getting filename 
+    now = dt.now()
+    dt_string = now.strftime("%Y-%m-%dT%H.%M.%S")
+    file_name = label+'_'+dt_string+'.csv'
     
-    print(f"Committing {label} data to database...")
+    #Write dataframe in csv
+    df.to_csv(file_name.csv, index=False)
     
-    # Insert DataFrame to Table
-    for row in acc_df.itertuples():
-        cursor.execute('''
-                    INSERT INTO MmrSensorData.dbo.body_acc_all (Epoch, X_axis, Y_axis, Z_axis, Label)
-                    VALUES (?,?,?,?,?)
-                    ''',
-                    row.Epoch, 
-                    row.X_axis,
-                    row.Y_axis,
-                    row.Z_axis,
-                    row.Label
-                    )
+    #Create Client
+    CONN = "your_connection_string"
+    service = BlobServiceClient.from_connection_string(conn_str=CONN)
     
-    conn.commit()
-    cursor.close()
+    #Upload Blob
+    #Accelorometer
+    container_name = label
+    blob_name = 'acc/'+filename
+    blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
+    #Gyroscope
+    blob.upload_blob(acc)
+    blob_name = 'gyr/'+filename
+    blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
+    blob.upload_blob(acc)
     
-    print("Finished!")
+    print("Sucessfully uploaded!")
     
-    cursor.close()
 
 
 def run() -> None:
