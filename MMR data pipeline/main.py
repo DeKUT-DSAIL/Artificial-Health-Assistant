@@ -27,10 +27,12 @@ def record_data(label: str, device: MetaWearClient) -> None:
     #Getting filename 
     now = dt.now()
     dt_string = now.strftime("%Y-%m-%dT%H.%M.%S")
-    file_name = label+'_'+dt_string+'.csv'
+    acc_file_name = label+'_'+dt_string+'accelerometer'+'.csv'
+    gyr_file_name = label+'_'+dt_string+'gyroscope'+'.csv'
     
     #Write dataframe in csv
-    df.to_csv(file_name, index=False)
+    acc_csv = acc.to_csv(acc_file_name, index=False)
+    gyr_csv = gyr.to_csv(gyr_file_name, index=False)
     
     #Create Client
     CONN = "your_connection_string"
@@ -39,11 +41,11 @@ def record_data(label: str, device: MetaWearClient) -> None:
     #Upload Blob
     #Accelorometer
     container_name = label
-    blob_name = 'acc/'+filename
+    blob_name = 'acc/'+acc_filename
     blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
     #Gyroscope
     blob.upload_blob(acc)
-    blob_name = 'gyr/'+filename
+    blob_name = 'gyr/'+gyr_filename
     blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
     blob.upload_blob(acc)
     
