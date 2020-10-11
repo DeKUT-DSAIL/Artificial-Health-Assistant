@@ -1,5 +1,6 @@
 from pymetawear.client import MetaWearClient
 #from model import BodyAccX, BodyAccY, BodyAccZ, BodyGyroX, BodyGyroY, BodyGyroZ
+import time
 import pyodbc
 import pandas as pd
 import os, uuid, sys
@@ -13,7 +14,7 @@ from utils import conn, stream_data
 #cursor = conn.cursor()
 
 
-def record_data(label: str, device: MetaWearClient) -> None:
+def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     """
     This function commits the data streamed to the database
     :param label:
@@ -21,7 +22,7 @@ def record_data(label: str, device: MetaWearClient) -> None:
     :return None:
     """
     print(f"Logging data for {label}")
-    acc, gyr = stream_data(device=device)
+    acc, gyr = stream_data(device=device, time_=time_)
     print("Finished!")
     
     #Getting filename 
