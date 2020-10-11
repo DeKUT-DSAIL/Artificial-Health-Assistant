@@ -30,7 +30,7 @@ def record_data(label: str, device: MetaWearClient) -> None:
     file_name = label+'_'+dt_string+'.csv'
     
     #Write dataframe in csv
-    df.to_csv(file_name.csv, index=False)
+    df.to_csv(file_name, index=False)
     
     #Create Client
     CONN = "your_connection_string"
