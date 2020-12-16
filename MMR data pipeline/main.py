@@ -7,7 +7,8 @@ import os, uuid, sys
 from datetime import datetime as dt
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from pymetawear.discover import select_device
-from utils import conn, stream_data
+from utils import stream_data
+
 
 # Connect to SQL Server
 #conn = pyodbc.connect(DATABASE_URI)
@@ -32,14 +33,21 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     gyr_file_name = label+'_'+dt_string+'_'+'gyroscope'+'.csv'
     
     #Write dataframe in csv
-    acc_data_path = "C:/Users/path/to/store/file" + acc_file_name
+    #Set path to where you are storing the data as a Environment variable like C:\\Users\\User\\Desktop\\PROJECT\\Sensor_data\\
+    #Then GET the path
+    acc_path = os.environ.get('ACC_PATH') 
+    acc_data_path = acc_path + acc_file_name
+
+    gyr_path = os.environ.get('GYR_PATH') 
+    gyr_data_path = gyr_path + gyr_file_name
+
+    #Convert pandaframes to CSV files
     acc.to_csv(acc_data_path, index=False)
-    gyr_data_path= 'C:/Users/path/to/store/file'+ gyr_file_name
-    gyr.to_csv(gyr_file_name, index=False)
+    gyr.to_csv(gyr_data_path, index=False)
     
     
     #Create Client
-    CONN = "your_connection_string"
+    CONN = os.environ.get('CONN_STRING')
     service = BlobServiceClient.from_connection_string(conn_str=CONN)
     
     #Upload Blob
@@ -80,10 +88,10 @@ def run() -> None:
 
     prompt = """
     \nChoose a number for an exercise below
-    1. Walking
-    2. Sitting
-    3. Matching
-    4. Body Stretch(Arms)
+    1. Standing
+    2. Walking
+    3. Sitting
+    4. Laying Down
     """
 
     while proceed:
@@ -93,14 +101,14 @@ def run() -> None:
             exercise = int(input(prompt))
 
         if exercise == 1:
-            action = 'walking'
+            action = 'standing'
         elif exercise == 2:
-            action = 'sitting'
+            action = 'walking'
         elif exercise == 3:
-            action = 'matching'
+            action = 'sitting'
         else:
-            action = 'body stretch'
-
+            action = 'laying'
+            
         time_ = int(input(f"\nEnter Seconds You'll do {action}:\n"))
         # time_ = 60
 
@@ -112,7 +120,7 @@ def run() -> None:
                 print("Exiting...")
                 proceed = False
         except Exception as message:
-            print("Commit to database failed terribly due to\n", message)
+            print("Commit to storage failed terribly due to\n", message)
             choice = input('Repeat or exit\n1. Repeat\n2. Exit\n')
             if choice != '1':
                 print("Exiting...")

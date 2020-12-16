@@ -41,7 +41,7 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
         
         
 def stream_data(device: MetaWearClient, data_rate: float = 25.0, acc_data_range: float = 16.0,
-                gyr_data_range: int = 500):
+                gyr_data_range: int = 500,time_ : int = 60):
     """
     This function streams accelerometer and gyroscope data
     :param device: MetaWearClient
@@ -63,6 +63,7 @@ def stream_data(device: MetaWearClient, data_rate: float = 25.0, acc_data_range:
     device.gyroscope.notifications(callback=lambda data: gyr_data_points.append(data))
     
     print_progress_bar(0, time_, prefix='Collecting Data:', suffix='Complete', length=30)
+    counter = 0.001
     while counter <= time_:
         sleep(0.02)
         print_progress_bar(counter, time_, prefix='Collecting Data:', suffix='Complete', length=30)
