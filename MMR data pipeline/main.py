@@ -9,10 +9,6 @@ from pymetawear.discover import select_device
 from utils import stream_data
 
 
-# Connect to SQL Server
-#conn = pyodbc.connect(DATABASE_URI)
-#cursor = conn.cursor()
-
 
 def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     """
@@ -34,11 +30,9 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     #Write dataframe in csv
     #Set path to where you are storing the data as a Environment variable like C:\\Users\\User\\Desktop\\PROJECT\\Sensor_data\\
     #Then GET the path
-    acc_path = os.environ.get('ACC_PATH') 
-    acc_data_path = acc_path + acc_file_name
-
-    gyr_path = os.environ.get('GYR_PATH') 
-    gyr_data_path = gyr_path + gyr_file_name
+    data_path = os.environ.get('DATA_PATH') 
+    acc_data_path = data_path + acc_file_name
+    gyr_data_path = data_path + gyr_file_name
 
     #Convert pandaframes to CSV files
     acc.to_csv(acc_data_path, index=False)
@@ -46,11 +40,12 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     
     
     #Create Client
+    #Obtain connection string from Azure Portal and set as environnment variable the GET it
     CONN = os.environ.get('CONN_STRING')
     service = BlobServiceClient.from_connection_string(conn_str=CONN)
     
     #Upload Blob
-    #Accelorometer
+    #Accelorometer Data
     container_name = label
     blob_name = 'acc/'+acc_file_name
     blob = BlobClient.from_connection_string(conn_str=CONN, container_name = container_name, blob_name = blob_name)
@@ -60,7 +55,7 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
             blob.upload_blob(data)
     
     
-    #Gyroscope
+    #Gyroscope Data
     blob_name = 'gyr/'+gyr_file_name
     blob = BlobClient.from_connection_string(conn_str=CONN, container_name = container_name, blob_name = blob_name)
     
