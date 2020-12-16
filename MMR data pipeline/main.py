@@ -1,5 +1,4 @@
 from pymetawear.client import MetaWearClient
-#from model import BodyAccX, BodyAccY, BodyAccZ, BodyGyroX, BodyGyroY, BodyGyroZ
 import time
 import pyodbc
 import pandas as pd
