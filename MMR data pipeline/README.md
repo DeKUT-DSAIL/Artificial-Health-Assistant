@@ -1,20 +1,32 @@
 # MMR Data Pipeline
-This 'pipeline' streams data and commits it an azure SQL database
+This repository holds code used to stream sensor data from a [MetaMotionR](https://mbientlab.com/store/metamotionr/). It streams accelorometer and gyroscope sensor data and commits it to an Azure blob storage
 
-## Installation
-- Install [ODBC driver for SQL server](https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?redirectedfrom=MSDN&view=sql-server-ver15)
+## Requirements
+- Python API
+- Virtual Environment
+- Project Packages 
+- Connection string to Azure Blob Storage
+
+## 1. Python API
 
 - Make sure The python API is set up correctly.
     1. Linux [API Installation](https://mbientlab.com/tutorials/PyLinux.html)
     2. Windows [API Installation](https://mbientlab.com/tutorials/PyWindows.html)
 
+2. Python Virtual Environment
+To install and create a virtul environment check out:
+<br> (https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/)
+
+3. Project Packages
 To install required packages, run the following command after creating a virtual env.
 
 ```python
 pip install -r requirements.txt
 ```
+4. Connection String
+- Before continuing, you need to have the connection string to the blob storage from the [Azure Portal](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), [Azure PowerShell](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-powershell) or [Azure CLI](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-cli)
+- To set up an Azure Blob Storage account and get a brief walk though of using blob storage you can check out this repo:
 
-Before continuing, you need to have the CONN_STR to the database.
 
 Run the following in a terminal
 
@@ -29,119 +41,53 @@ $ set CONN_STR=pastethereallyreallylongconnectionstringhere
 ```
 
 ## Usage
-Turn on bluetooth and you are good to go.
+- Turn on bluetooth.
 
-Run the following and choose an option for an exercise
+- Run the following and choose an option for an exercise
 ```
 python main.py
 ```
+The script ```main.py``` does the following:
+1. Discovers and connects to MMR sensor
+2. Streams data based on time entered
+3. Uploads data in form of CSV files to the Azure Blob Storage
+
+When you run it in the terminal it will look like this:
 ```
-Connected
-Services disconvered
-Characteristics discovered
-Descriptors found
+Discovering nearby Bluetooth Low Energy devices...
+[1] - CE:BA:F1:04:7C:D2: MetaWear
+[2] - F9:E1:CD:70:81:0C:
+Which device do you want to connect to? 1
+
 
 Choose a number for an exercise below
-1. Jumping Jacks
-2. Squats
-3. Jogs
-4. Body Stretch(Arms)
-3
-Enter number of Rounds You'll do jogs: 3
+    1. Standing
+    2. Walking
+    3. Sitting
+    4. Laying Down
+    3
 
+Enter Seconds You'll do sitting:
+60
+Logging data for sitting
 
-```
-
-Then the output will be something like this
-```
-Logging and adding data for jogs to database
-(Approx. 81 seconds)
-Round 1
+Collecting Data:         |??????????????????????????????| 100.0% Complete
 Finished!
-Round 2
-Finished!
-Round 3
-Finished!
-Committing jogs of 3 Round(s) data to database...
-Finished!
-
 ```
 Then you can choose to continue or Exit the program
 ```
 Continue or exit
-1. Continue
+1. Repeat
 2. Exit
 
-1
+2
 ```
 
-## Some challenges you might face
-After running the program you might get something like this
-```
-error 1600154639.663913: Error on line: 296 (src/blestatemachine.cc): Operation now in progress
-*** buffer overflow detected ***: terminated
-Aborted (core dumped)
 
-```
-I'm not sure what the problem is, but if you run it one more time, boom. fixed :)
-
-### Another Challenge I've faced
+### Challenges you may face
 The bluetooth may disconnect mid program. Just hit ```ctrl + C``` to stop program and restart again
 
 ## Querying data
 To query data you can create a notebook or just run along with a script
 
-### import required packages
-
-```python
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-
-from model import BodyAccX, BodyAccY, BodyAccZ
-from utils import Session
-```
-### Query first row of data
-```python
-s = Session()
-
-x = s.query(BodyAccX).first().row_data
-y = s.query(BodyAccY).first().row_data
-z = s.query(BodyAccZ).first().row_data
-```
-### Prepare data
-```python
-def prep_data(x, y, z):
-    x_list = x.split(', ')
-    y_list = y.split(', ')
-    z_list = z.split(', ')
-
-    for i in range(len(x_list)):
-        x_list[i] = float(x_list[i])
-        y_list[i] = float(y_list[i])
-        z_list[i] = float(z_list[i])
-
-    new_x = np.array(x_list)
-    new_y = np.array(y_list)
-    new_z = np.array(z_list)
-    
-    return new_x, new_y, new_z
-
-newx, newy, newz = prep_data(x, y, z)
-```
-
-### Visualize the data
-```python
-%matplotlib inline
-
-fig = plt.figure()
-ax = plt.axes()
-ax.plot(newx, 'r', label='acc in x-axis')
-ax.plot(newy, 'g', label='acc in y-axis')
-ax.plot(newz, 'b', label='acc in z-axis')
-ax.grid(True, which='both')
-ax.set_ylabel('Acceleration')
-ax.set_xlabel('Time Steps')
-ax.legend()
-```
 ![alt text](files/plot.png)

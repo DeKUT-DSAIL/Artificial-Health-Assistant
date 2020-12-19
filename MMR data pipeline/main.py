@@ -17,7 +17,7 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     :param device:
     :return None:
     """
-    print(f"Logging data for {label}")
+    print(f"\nLogging data for {label}")
     acc, gyr = stream_data(device=device, time_=time_)
     print("Finished!")
     

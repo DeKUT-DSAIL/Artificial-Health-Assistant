@@ -8,7 +8,7 @@ from time import sleep
 from mbientlab.metawear import libmetawear
 from pymetawear.client import MetaWearClient
 
-from config import DATABASE_URI
+
 
 
 #engine = create_engine(DATABASE_URI)
@@ -79,21 +79,6 @@ def stream_data(device: MetaWearClient, data_rate: float = 25.0, acc_data_range:
     gyr = pd.DataFrame(gyr_data_points)
 
     return acc, gyr
-
-
-'''
-def recreate_database() -> None:
-    """
-    his function creates tables in a database in None exist
-    else it deletes and creates them again
-    :return None:
-    """
-    try:
-        Base.metadata.drop_all(engine)
-    except:
-        pass
-    Base.metadata.create_all(engine)
-'''
 
 def reset(device) -> None:
     """
