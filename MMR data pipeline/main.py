@@ -109,7 +109,7 @@ def run() -> None:
         # Start to stream and record data
         try:
             record_data(label=action, device=d, time_=time_)
-            choice = input('Continue or exit\n1. Continue\n2. Exit\n')
+            choice = input('\nContinue or exit\n1. Continue\n2. Exit\n')
             if choice != '1':
                 print("Exiting...")
                 proceed = False
