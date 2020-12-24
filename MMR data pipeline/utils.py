@@ -1,16 +1,19 @@
-from time import sleep
+#from sqlalchemy import create_engine
+#from sqlalchemy.orm import sessionmaker
+#from model import Base
 
+import pyodbc
+import pandas as pd
+from time import sleep
 from mbientlab.metawear import libmetawear
 from pymetawear.client import MetaWearClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-from model import Base
 
-from config import DATABASE_URI
 
-engine = create_engine(DATABASE_URI)
-Session = sessionmaker(bind=engine)
+
+#engine = create_engine(DATABASE_URI)
+#Session = sessionmaker(bind=engine)
+
 
 
 # Print iterations progress
@@ -35,32 +38,32 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
     if iteration == total:
         print()
 
-
-def stream_data(device: MetaWearClient, time_: int, data_rate: float = 50.0, acc_data_range: float = 16.0,
-                gyr_data_range: int = 500):
+        
+        
+def stream_data(device: MetaWearClient, data_rate: float = 25.0, acc_data_range: float = 16.0,
+                gyr_data_range: int = 500,time_ : int = 60):
     """
-    This function streams accelerometer data
-    :param time_:
-    :param gyr_data_range:
+    This function streams accelerometer and gyroscope data
     :param device: MetaWearClient
     :param data_rate: float
     :param acc_data_range: float
-    :return accelerometer tuples of x, y, z axis:
+    :param gyr_data_range: int
+    :return accelerometer and gyroscope Dataframes:
     """
     acc_data_points = []
     gyr_data_points = []
-
-    counter = 0
 
     # Set data rate and measuring range
     device.accelerometer.set_settings(data_rate=data_rate, data_range=acc_data_range)
     device.gyroscope.set_settings(data_rate=data_rate, data_range=gyr_data_range)
 
+
     # Enable notifications and register a callback for them.
     device.accelerometer.notifications(callback=lambda data: acc_data_points.append(data))
     device.gyroscope.notifications(callback=lambda data: gyr_data_points.append(data))
-
+    
     print_progress_bar(0, time_, prefix='Collecting Data:', suffix='Complete', length=30)
+    counter = 0.001
     while counter <= time_:
         sleep(0.02)
         print_progress_bar(counter, time_, prefix='Collecting Data:', suffix='Complete', length=30)
@@ -70,30 +73,12 @@ def stream_data(device: MetaWearClient, time_: int, data_rate: float = 50.0, acc
     device.accelerometer.notifications()
     device.gyroscope.notifications()
 
-    acc = (str([i['value'].x for i in acc_data_points]), str([j['value'].y for j in acc_data_points]),
-           str([k['value'].z for k in acc_data_points]))
 
-    gyr = (str([i['value'].x for i in gyr_data_points]), str([j['value'].y for j in gyr_data_points]),
-           str([k['value'].z for k in gyr_data_points]))
+    acc = pd.DataFrame(acc_data_points)
 
-    print(len(acc_data_points))
-    print(len(gyr_data_points))
+    gyr = pd.DataFrame(gyr_data_points)
 
     return acc, gyr
-
-
-def recreate_database() -> None:
-    """
-    his function creates tables in a database in None exist
-    else it deletes and creates them again
-    :return None:
-    """
-    try:
-        Base.metadata.drop_all(engine)
-    except:
-        pass
-    Base.metadata.create_all(engine)
-
 
 def reset(device) -> None:
     """
