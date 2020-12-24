@@ -1,4 +1,4 @@
-# MMR Data Pipeline
+# MMR Data Collection Pipeline
 This repository holds code used to stream sensor data from a [MetaMotionR](https://mbientlab.com/store/metamotionr/). It streams accelorometer and gyroscope sensor data and commits it to an Azure blob storage
 
 ## Requirements
@@ -25,7 +25,7 @@ pip install -r requirements.txt
 ```
 ## 4. Connection String
 - Before continuing, you need to have the connection string to the blob storage from the [Azure Portal](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), [Azure PowerShell](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-powershell) or [Azure CLI](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-cli)
-- To set up an Azure Blob Storage account and get a brief walk though of using blob storage you can check out this repo:
+- To set up an Azure Blob Storage account and get a brief walk though of using blob storage you can check out this repo: https://github.com/makenasandra/azure_blob_storage
 
 
 Run the following in a terminal
@@ -86,7 +86,7 @@ Continue or exit
 
 
 ### Challenges you may face
-The bluetooth may disconnect mid program. Just hit ```ctrl + C``` to stop program and restart again
+The bluetooth may disconnect as the program is running. Just hit ```ctrl + C``` to stop program and restart again.
 
 ## Querying data
 To query data you can create a notebook or just run along with a script
