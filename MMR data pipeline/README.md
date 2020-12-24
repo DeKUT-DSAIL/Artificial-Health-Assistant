@@ -13,17 +13,17 @@ This repository holds code used to stream sensor data from a [MetaMotionR](https
     1. Linux [API Installation](https://mbientlab.com/tutorials/PyLinux.html)
     2. Windows [API Installation](https://mbientlab.com/tutorials/PyWindows.html)
 
-2. Python Virtual Environment
+## 2. Python Virtual Environment
 To install and create a virtul environment check out:
 <br> (https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/)
 
-3. Project Packages
+## 3. Project Packages
 To install required packages, run the following command after creating a virtual env.
 
 ```python
 pip install -r requirements.txt
 ```
-4. Connection String
+## 4. Connection String
 - Before continuing, you need to have the connection string to the blob storage from the [Azure Portal](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), [Azure PowerShell](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-powershell) or [Azure CLI](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-cli)
 - To set up an Azure Blob Storage account and get a brief walk though of using blob storage you can check out this repo:
 
