@@ -92,3 +92,7 @@ The bluetooth may disconnect as the program is running. Just hit ```ctrl + C``` 
 To query data you can create a notebook or just run along with a script
 
 ![alt text](files/plot.png)
+
+## For more information
+For more information on the Artificial Health Assistant Project you check our report:
+<br> [HUMAN ACTIVITY RECOGNITION: MONITORING THE RECOVERY OF ORTHOPAEDIC PATIENTS](https://dekut-dsail.github.io/technical-reports.html)
