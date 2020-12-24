@@ -14,8 +14,8 @@ This repository holds code used to stream sensor data from a [MetaMotionR](https
     2. Windows [API Installation](https://mbientlab.com/tutorials/PyWindows.html)
 
 ## 2. Python Virtual Environment
-To install and create a virtul environment check out:
-<br> (https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/)
+To learn how to install and create a virtul environment check out:
+<br> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
 
 ## 3. Project Packages
 To install required packages, run the following command after creating a virtual env.
