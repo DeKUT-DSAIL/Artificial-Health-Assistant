@@ -1,4 +1,4 @@
-# MMR Data Pipeline
+# MMR Data Collection Pipeline
 This repository holds code used to stream sensor data from a [MetaMotionR](https://mbientlab.com/store/metamotionr/). It streams accelorometer and gyroscope sensor data and commits it to an Azure blob storage
 
 ## Requirements
@@ -13,19 +13,19 @@ This repository holds code used to stream sensor data from a [MetaMotionR](https
     1. Linux [API Installation](https://mbientlab.com/tutorials/PyLinux.html)
     2. Windows [API Installation](https://mbientlab.com/tutorials/PyWindows.html)
 
-2. Python Virtual Environment
-To install and create a virtul environment check out:
-<br> (https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/)
+## 2. Python Virtual Environment
+To learn how to install and create a virtul environment check out:
+<br> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
 
-3. Project Packages
+## 3. Project Packages
 To install required packages, run the following command after creating a virtual env.
 
 ```python
 pip install -r requirements.txt
 ```
-4. Connection String
+## 4. Connection String
 - Before continuing, you need to have the connection string to the blob storage from the [Azure Portal](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), [Azure PowerShell](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-powershell) or [Azure CLI](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-cli)
-- To set up an Azure Blob Storage account and get a brief walk though of using blob storage you can check out this repo:
+- To set up an Azure Blob Storage account and get a brief walk though of using blob storage you can check out this repo: https://github.com/makenasandra/azure_blob_storage
 
 
 Run the following in a terminal
@@ -86,9 +86,13 @@ Continue or exit
 
 
 ### Challenges you may face
-The bluetooth may disconnect mid program. Just hit ```ctrl + C``` to stop program and restart again
+The bluetooth may disconnect as the program is running. Just hit ```ctrl + C``` to stop program and restart again.
 
 ## Querying data
 To query data you can create a notebook or just run along with a script
 
 ![alt text](files/plot.png)
+
+## For More Information
+For more information on the Artificial Health Assistant Project you can read our report:
+<br> [HUMAN ACTIVITY RECOGNITION: MONITORING THE RECOVERY OF ORTHOPAEDIC PATIENTS](https://dekut-dsail.github.io/technical-reports.html)
