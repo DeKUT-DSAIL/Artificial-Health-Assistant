@@ -32,8 +32,8 @@ def record_data(label: str, device: MetaWearClient, time_: int) -> None:
     #Set path to where you are storing the data as a Environment variable like C:\\Users\\User\\Desktop\\PROJECT\\Sensor_data\\
     #Then GET the path
     data_path = os.environ.get('DATA_PATH') 
-    acc_data_path = data_path + acc_file_name
-    gyr_data_path = data_path + gyr_file_name
+    acc_data_path = os.path.join(data_path, acc_file_name)
+    gyr_data_path = os.path.join(data_path, gyr_file_name)
 
     #Convert pandaframes to CSV files
     acc.to_csv(acc_data_path, index=False)
