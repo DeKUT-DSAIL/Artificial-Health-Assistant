@@ -6,37 +6,42 @@ from time import sleep
 
 from mbientlab.metawear import libmetawear
 from pymetawear.client import MetaWearClient
+from pymetawear.discover import select_device
 
 cwd = os.getcwd()
 acc_data_dir = cwd + "/data/acc"
 gyro_data_dir = cwd + "/data/gyro"
 
-CONN = "DefaultEndpointsProtocol=https;AccountName=mmrdata;AccountKey=Pt75gsdhmrImM9cDdMSt5gl21" \
-       "/xR81JdE3OLA3W2Rgz4w6fjhdtIqCbHwsmNCeY65YMsVo3bL3n4wfZO1p267w==;EndpointSuffix=core.windows.net "
-
 
 def upload_csv(fname: str):
     # Create Client
-    # CONN = os.environ.get('CONN_STRING')
-    service = BlobServiceClient.from_connection_string(conn_str=CONN)
+    try:
+        CONN = os.environ.get('CONN_STRING')
+        service = BlobServiceClient.from_connection_string(conn_str=CONN)
 
-    # Up4load Blob
-    container_name = fname.split('_')[0]
-    if fname.split('_')[-1].startswith('acc'):
-        os.chdir(acc_data_dir)
-        blob_name = 'acc/' + fname
-    else:
-        os.chdir(gyro_data_dir)
-        blob_name = 'gyr/' + fname
+        # Upload Blob
+        container_name = fname.split('_')[0]
 
-    blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
+        if fname.split('_')[-1].startswith('acc'):
+            os.chdir(acc_data_dir)
+            data_path = os.path.join(acc_data_dir, fname)
+            blob_name = 'acc/' + fname
 
-    with open(fname, "rb") as data:
-        try:
+        else:
+            os.chdir(gyro_data_dir)
+            data_path = os.path.join(gyro_data_dir, fname)
+            blob_name = 'gyr/' + fname
+
+
+        blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
+
+        with open(data_path, "rb") as data:
             blob.upload_blob(data)
-            print("Uploaded successfully")
-        except Exception as m:
-            print("Failed to upload data: ", m)
+        print("Uploaded successfully")
+        os.remove(data_path)
+
+    except Exception as m:
+        print("Failed to upload data: ", m)
 
 
 # Print iterations progress
@@ -166,9 +171,9 @@ def run() -> None:
     :return None:
     """
     # Create a MetaWear device
-    # address = select_device()
-    d = MetaWearClient('EE:50:E7:BF:21:83')
-    # d = MetaWearClient(str(address))
+    address = select_device()
+    # d = MetaWearClient('EE:50:E7:BF:21:83')
+    d = MetaWearClient(str(address))
 
     proceed = True
 
@@ -201,14 +206,17 @@ def run() -> None:
         # Start to stream and record data
         try:
             acc_fname, gyro_fname = write_data_csv(title=action, device=d, time_=time_)
+
             upload_choice = input("\nUpload data?\n1. Yes\n2. No\n")
-            if upload_choice == 1:
-                upload_csv(acc_fname)
-                upload_csv(gyro_fname)
+            #if upload_choice == 1:
+            upload_csv(acc_fname)
+            upload_csv(gyro_fname)
+
             choice = input('Continue or exit\n1. Continue\n2. Exit\n')
             if choice != '1':
                 print("Exiting...")
                 proceed = False
+
         except Exception as message:
             print("Commit to database failed terribly due to\n", message)
             choice = input('Repeat or exit\n1. Repeat\n2. Exit\n')
@@ -220,5 +228,5 @@ def run() -> None:
     reset(d)
     # d.disconnect()
 
-run()
 
+run()
