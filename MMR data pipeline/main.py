@@ -8,9 +8,14 @@ from mbientlab.metawear import libmetawear
 from pymetawear.client import MetaWearClient
 from pymetawear.discover import select_device
 
+'''
 cwd = os.getcwd()
 acc_data_dir = cwd + "/data/acc"
 gyro_data_dir = cwd + "/data/gyro"
+'''
+data_path = os.environ.get('DATA_PATH')
+acc_data_dir = os.path.join(data_path, 'acc')
+gyro_data_dir = os.path.join(data_path, 'gyro')
 
 
 def upload_csv(fname: str):
@@ -208,9 +213,9 @@ def run() -> None:
             acc_fname, gyro_fname = write_data_csv(title=action, device=d, time_=time_)
 
             upload_choice = input("\nUpload data?\n1. Yes\n2. No\n")
-            #if upload_choice == 1:
-            upload_csv(acc_fname)
-            upload_csv(gyro_fname)
+            if upload_choice == '1':
+                upload_csv(acc_fname)
+                upload_csv(gyro_fname)
 
             choice = input('Continue or exit\n1. Continue\n2. Exit\n')
             if choice != '1':
