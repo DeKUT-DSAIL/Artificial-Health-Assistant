@@ -200,7 +200,7 @@ def run() -> None:
         elif exercise == 2:
             action = 'sitting'
         elif exercise == 3:
-            action = 'lying down'
+            action = 'laying'
         else:
             action = 'standing'
 
