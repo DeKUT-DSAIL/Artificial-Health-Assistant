@@ -37,12 +37,11 @@ def upload_csv(fname: str):
             data_path = os.path.join(gyro_data_dir, fname)
             blob_name = 'gyr/' + fname
 
-
         blob = BlobClient.from_connection_string(conn_str=CONN, container_name=container_name, blob_name=blob_name)
 
         with open(data_path, "rb") as data:
             blob.upload_blob(data)
-        print("Uploaded successfully")
+        print(f"{fname} uploaded successfully!")
         os.remove(data_path)
 
     except Exception as m:
