@@ -72,8 +72,15 @@ Enter Seconds You'll do sitting:
 Logging data for sitting
 
 Collecting Data:         |████████████████████████████████████████| 100.0% Complete
-Finished!
-Sucessfully uploaded!
+3114
+3070
+
+Upload data?
+1. Yes
+2. No
+1
+sitting_2021-02-20T10.09.01_accelerometer.csv uploaded successfully!
+sitting_2021-02-20T10.09.01_gyroscope.csv uploaded successfully!
 ```
 Then you can choose to continue or Exit the program
 ```
