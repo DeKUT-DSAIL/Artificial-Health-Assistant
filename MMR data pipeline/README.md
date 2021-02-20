@@ -48,9 +48,9 @@ $ set CONN_STR=pastethereallyreallylongconnectionstringhere
 python main.py
 ```
 The script ```main.py``` does the following:
-1. Discovers and connects to MMR sensor
-2. Streams data based on time entered
-3. Uploads data in form of CSV files to the Azure Blob Storage
+ + Discovers and connects to MMR sensor
+ + Streams data based on time entered
+ + Uploads data in form of CSV files to the Azure Blob Storage
 
 When you run it in the terminal it will look like this:
 ```
