@@ -93,10 +93,14 @@ Continue or exit
 
 
 ### Challenges you may face
-1. The bluetooth may disconnect as the program is running. Just hit ```ctrl + C``` to stop program and restart again.
-2. If you notice that you are collecting way less data than expected you can:  
+1. The device fails to conncet or program fails to detect MeteWaer Device 
+    + Try rerunning the program. If it fails to connect after rerunning atleast 5 times then there could be another problem
+3. The bluetooth may disconnect as the program is running. Just hit ```ctrl + C``` to stop program and restart again.
+4. Device collecting way less data than expected or no data at all:  
+    + Exit program
     + Ensure the MetaWear Device is the only bluetooth device connected, disconnect any other buletooth devices conected to your laptop.
-    + Update the Metawear firmware
+    + Update the Metawear firmware if there is an update available
+    + Run program again
 
 
 ## Querying data
